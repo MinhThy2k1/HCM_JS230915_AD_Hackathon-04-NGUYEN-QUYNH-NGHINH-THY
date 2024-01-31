@@ -1,0 +1,33 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = "mysql://root:@localhost:3306/hackathon-04-ad"
+}
+
+model category {
+    id        Int        @id @default(autoincrement())
+    name      String     @unique @db.Char(50)
+    questions question[]
+}
+
+model question {
+    id         Int      @id @default(autoincrement())
+    createdAt  DateTime @default(now())
+    content    String   @db.LongText
+    level      Int
+    category   category @relation(fields: [categoryId], references: [id])
+    categoryId Int
+    answers    answer[]
+}
+
+model answer {
+    id         Int      @id @default(autoincrement())
+    is_answer  Boolean
+    content    String   @db.LongText
+    createdAt  DateTime @default(now())
+    question   question @relation(fields: [questionId], references: [id])
+    questionId Int
+}
